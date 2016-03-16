@@ -1,5 +1,8 @@
+require 'forwardable'
+require 'logger'
 require "s3_bunny/version"
 require "s3_bunny/config"
+require "s3_bunny/messages_factory"
 require "s3_bunny/sqs_messages"
 require "s3_bunny/message"
 require "s3_bunny/s3_item"

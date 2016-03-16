@@ -5,7 +5,7 @@ describe S3Bunny do
     expect(S3Bunny::VERSION).not_to be nil
   end
 
-  it 'does something useful' do
-    expect(false).to eq(true)
+  it 'logger should be config logger' do
+    expect(S3Bunny.logger).to be S3Bunny.config.logger
   end
 end
