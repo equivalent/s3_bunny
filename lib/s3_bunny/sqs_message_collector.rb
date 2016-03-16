@@ -1,5 +1,5 @@
 module S3Bunny
-  class SQSMessages
+  class SQSMessageCollector
     attr_reader :queues_matcher
 
     def initialize(queues_matcher:,credentials:, region:)
