@@ -11,17 +11,19 @@ module S3Bunny
     end
 
     def messages
-      response = request_queue_messages
+      @messages ||= begin
+        response = request_queue_messages
 
-      S3Bunny.logger.debug response.inspect
+        S3Bunny.logger.debug response.inspect
 
-      if response.successful?
-        response
-          .messages
-          .map { |m| build_message(m) }
-      else
-        S3Bunny.logger.warning "Response of #{sqs_queue_url} not successful"
-        []
+        if response.successful?
+          response
+            .messages
+            .map { |m| build_message(m) }
+        else
+          S3Bunny.logger.warning "Response of #{sqs_queue_url} not successful"
+          []
+        end
       end
     end
 

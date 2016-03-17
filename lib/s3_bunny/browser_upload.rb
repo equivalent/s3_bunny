@@ -19,6 +19,9 @@ module S3Bunny
         key: key_generator.call,
         success_action_status: success_action_status,
         acl: acl,
+        content_length_range: 0..10.megabytes,
+        #content_type_starts_with: "image/jpg",
+        key_starts_with: "uploads/",
         metadata: {
           'app-resource-type' => resource_type,
           'app-resource-id' =>   resource_id.to_s,

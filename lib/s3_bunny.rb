@@ -1,3 +1,4 @@
+require 'aws-sdk'
 require 'forwardable'
 require 'logger'
 require "s3_bunny/version"
