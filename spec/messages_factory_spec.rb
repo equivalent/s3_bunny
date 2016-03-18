@@ -1,4 +1,5 @@
 require 'spec_helper'
+
 RSpec.describe S3Bunny::MessagesFactory do
   let(:subject) { described_class.new(base, sqs_url) }
   let(:sqs_url) { 'https://sqs.eu-west-1.amazonaws.com/666666666666/sqs-name-s3bunny-development' }
