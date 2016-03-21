@@ -1,6 +1,6 @@
 module S3Bunny
   class BrowserUpload
-    attr_writer :options, :key_generator, :success_action_status, :acl
+    attr_writer :options, :key_generator, :success_action_status, :acl, :content_length_range
     attr_accessor :resource_type
     attr_accessor :resource_id
 
@@ -19,7 +19,7 @@ module S3Bunny
         key: key_generator.call,
         success_action_status: success_action_status,
         acl: acl,
-        content_length_range: 0..10.megabytes,
+        content_length_range: content_length_range,
         #content_type_starts_with: "image/jpg",
         key_starts_with: "uploads/",
         metadata: {
@@ -28,6 +28,10 @@ module S3Bunny
           'original-filename' => '${filename}'   # this is AWS S3 keywoard suggar.
         }
       }
+    end
+
+    def content_length_range
+      @content_length_range || 0..10485760 #0 - 10.megabytes
     end
 
     def acl
