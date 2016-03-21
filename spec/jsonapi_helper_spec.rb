@@ -17,6 +17,7 @@ RSpec.describe S3Bunny::JSONAPIHelper do
         "type" => "aws_s3_presigned_posts",
         "id"=> "uploads/oeausoea-oaeuoaeu-ueouo",
         "attributes"=>  {
+          "url" => 'http://s3-foobar',
           "fields"=>  [
             {"name"=> "foo","value"=> "bar"},
             {"name"=> "key","value"=> "uploads/oeausoea-oaeuoaeu-ueouo"}

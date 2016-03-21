@@ -5,6 +5,7 @@ module S3Bunny
         'type' => 'aws_s3_presigned_posts',
         'id'   => aws_resource.fields.fetch('key'),
         'attributes' => {
+          'url' => aws_resource.url,
           'fields' => aws_resource.fields.map do |key, value|
             { "name" => key, "value" => value }
           end
