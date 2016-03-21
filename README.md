@@ -22,6 +22,46 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+
+
+## Easter Eggs
+
+#### JSON API json helper of Aws::S3::PresignedPost
+
+
+```ruby
+require 's3_bunny/jsonapi_helper'
+class ProvisionalUploadsController < ApplicationController
+  def new
+    @presigned_post =  S3Bunny::BrowserUpload
+      .new(region: region, credentials: credentials, bucket_name: bucket_name)
+      .tap { |pp| # ... }
+       # ... and so on
+
+    respond_to do |format|
+      format.html { render 'new' }  # render form with @presigned_post
+      format.json { render json: S3Bunny::JSONAPIHelper.as_json(@presigned_post) } # json fields
+    end
+  end
+end
+```
+
+```json
+{
+  "type":"aws_s3_presigned_posts",
+  "id":"uploads/4ada3f37-4603-4844-b348-11dcddc5f786",
+  "attributes":{
+    "fields":[
+       {"name":"key","value":"uploads/4ada3f37-4603-4844-b348-11dcddc5f786"},
+       {"name":"success_action_status","value":"201"},
+       {"name":"acl","value":"public-read"},
+       # ...
+    ]
+  }
+}
+```
+
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
