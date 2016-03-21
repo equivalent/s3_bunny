@@ -52,6 +52,7 @@ end
   "id":"uploads/4ada3f37-4603-4844-b348-11dcddc5f786",
   "attributes":{
     "fields":[
+       "url":"https://s3-eu-west....."
        {"name":"key","value":"uploads/4ada3f37-4603-4844-b348-11dcddc5f786"},
        {"name":"success_action_status","value":"201"},
        {"name":"acl","value":"public-read"},
