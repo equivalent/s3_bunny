@@ -31,7 +31,7 @@ module S3Bunny
     end
 
     def content_length_range
-      @content_length_range || 0..10485760 #0 - 10.megabytes
+      @content_length_range ||= 0..10_485_760 #0 - 10.megabytes
     end
 
     def acl
