@@ -20,8 +20,65 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+1. Create a new S3 bucket / edit S3 bucket (we recommend separate bucket for
+   every enviroment development, qa, staging, production ...)
+2. Edit bucket CORS and allow origin (in our case `http://localhost:3000`)
 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<CORSConfiguration xmlns="http://s3.amazonaws.com/doc/2006-03-01/">
+    <CORSRule>
+        <AllowedOrigin>http://localhost:3000</AllowedOrigin>
+        <AllowedMethod>GET</AllowedMethod>
+        <AllowedMethod>POST</AllowedMethod>
+        <AllowedMethod>PUT</AllowedMethod>
+        <AllowedHeader>*</AllowedHeader>
+    </CORSRule>
+</CORSConfiguration>
+```
+
+3. create SQS que and allow this S3 Bucket to write to it + your
+   application to read from it
+
+
+```
+{
+  "Version": "2008-10-17",
+  "Id": "example-ID",
+  "Statement": [
+    {
+      "Sid": "example-statement-ID",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": "SQS:SendMessage",
+      "Resource":
+"arn:aws:sqs:eu-west-1:666666666666:myappcom-ireland-s3bunny-uppload-development",
+      "Condition": {
+        "ArnLike": {
+          "aws:SourceArn":
+"arn:aws:s3:*:*:myapp.com-browser-uploads-development"
+        }
+      }
+    },
+    {
+      "Sid": "Sid1457107544131",
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "arn:aws:iam::666666666666:user/myapp_user"
+      },
+      "Action": "SQS:*",
+      "Resource":
+"arn:aws:sqs:eu-west-1:666666666666:myappcom-ireland-s3bunny-uppload-development"
+    }
+  ]
+}
+```
+
+4. make sure your application AWS AMI user (`myapp_user`) has permission to edit/read/delete this Queue. For debugging purpose for now you can choose `SQSFullAccess`  and then change it aproprietly 
+
+5. 
 
 
 ## Easter Eggs
