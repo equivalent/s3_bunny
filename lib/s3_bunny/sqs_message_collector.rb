@@ -1,16 +1,15 @@
 module S3Bunny
   class SQSMessageCollector
-    attr_reader :queues_matcher
+    attr_reader :queues
 
-    def initialize(queues_matcher:,credentials:, region:)
-      @credentials    = credentials
-      @region         = region
-      @queues_matcher = queues_matcher
+    def initialize(credentials:)
+      @credentials = credentials
+      @queues = []
     end
 
     def messages
-      @messages ||= matching_sqs_queue_urls
-        .map { |queue_url| MessagesFactory.new(self, queue_url).messages }
+      @messages ||= queues
+        .map { |queue| MessagesFactory.new(queue, credentials: credentials).messages }
         .flatten
     end
 
@@ -20,18 +19,11 @@ module S3Bunny
       end
     end
 
+    def register(region:, url:)
+      queues << Queue.new(region: region, url: url, credentials: credentials)
+    end
+
     private
-      attr_reader :credentials, :region
-
-      def matching_sqs_queue_urls
-        sqs
-          .list_queues
-          .queue_urls
-          .select { |sqs_url| sqs_url.match(queues_matcher)  }
-      end
-
-      def sqs
-        @sqs ||= Aws::SQS::Client.new(region: region, credentials: credentials)
-      end
+      attr_reader :credentials
   end
 end

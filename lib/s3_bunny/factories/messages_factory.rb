@@ -2,12 +2,9 @@ module S3Bunny
   class MessagesFactory
     extend Forwardable
 
-    attr_reader :sqs_queue_url
-    def_delegators :base, :credentials, :region, :sqs
-
-    def initialize(base, sqs_queue_url)
-      @base = base
-      @sqs_queue_url = sqs_queue_url
+    def initialize(queue, credentials:)
+      @credentials = credentials
+      @queue = queue
     end
 
     def messages
@@ -28,7 +25,12 @@ module S3Bunny
     end
 
     private
-      attr_reader :base
+      attr_reader :queue, :credentials
+      def_delegators :queue, :region, :sqs
+
+      def sqs_queue_url
+        queue.url
+      end
 
       def request_queue_messages
         S3Bunny.logger.debug "Fetching messages from sqs_queue_url: #{sqs_queue_url}"

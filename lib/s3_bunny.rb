@@ -9,6 +9,7 @@ require "s3_bunny/sqs_message_collector"
 require "s3_bunny/message"
 require "s3_bunny/s3_item"
 require "s3_bunny/browser_upload"
+require "s3_bunny/queue"
 
 module S3Bunny
   def self.bucket_resource(region:, bucket_name:, credentials:)
