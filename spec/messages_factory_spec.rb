@@ -1,18 +1,16 @@
 require 'spec_helper'
 
 RSpec.describe S3Bunny::MessagesFactory do
-  let(:subject) { described_class.new(base, sqs_url) }
+  let(:subject) { described_class.new(queue, credentials: credentials) }
+  let(:credentials) { double :credentials }
   let(:sqs_url) { 'https://sqs.eu-west-1.amazonaws.com/666666666666/sqs-name-s3bunny-development' }
   let(:sqs) { instance_double(Aws::SQS::Client) }
   let(:successful) { true }
 
-  let(:base) do
-    # MessagesFactory atts like a delegator in terms of delegating
-    # #credentials, #bucket_name and #sqs to S3Bunny::SQSMessageCollector
-    double :this_is_just_delegator,
-      credentials: Object.new,
-      bucket_name: 'my-bucket',
+  let(:queue) do
+    instance_double S3Bunny::Queue,
       region: 'eu-west-1',
+      url: sqs_url,
       sqs: sqs
   end
 
@@ -43,19 +41,35 @@ RSpec.describe S3Bunny::MessagesFactory do
   end
 
   describe '#messages' do
-    it do
+    before do
       expect(sqs)
         .to receive(:receive_message)
         .and_return(seahorse_response)
+    end
 
+    let(:message_object) { subject.messages.last }
 
+    it 'should properly build message' do
       expect(subject.messages).to be_kind_of Array
       expect(subject.messages.size).to be 1
 
-      message = subject.messages.last
+      expect(message_object).to be_kind_of S3Bunny::Message
+    end
 
-      expect(message).to be_kind_of S3Bunny::Message
-      expect(message.message_id).to eq "d9caa0be-c9b8-486a-adac-5585e260d24f"
+    it 'should set message id' do
+      expect(message_object.message_id).to eq "d9caa0be-c9b8-486a-adac-5585e260d24f"
+    end
+
+    it 'should set queue url' do
+      expect(message_object.sqs_queue_url).to eq sqs_url
+    end
+
+    it 'should delegate credentials' do
+      expect(message_object.send(:credentials)).to be credentials
+    end
+
+    it 'should delegate sqs client' do
+      expect(message_object.send(:sqs)).to be sqs
     end
   end
 end
