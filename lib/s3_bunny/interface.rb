@@ -23,6 +23,16 @@ module S3Bunny
         .new(region: region, credentials: credentials, bucket_name: bucket_name)
     end
 
+    def sqs_collector
+      S3Bunny::SQSMessageCollector
+        .new(credentials: credentials)
+        .tap do |collector|
+          queues.each do |q|
+            collector.register(url: q.url, region: q.region_name)
+          end
+        end
+    end
+
     def queue_for_region(region)
       queues
         .select { |q| q.region_name == region }

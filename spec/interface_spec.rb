@@ -95,4 +95,15 @@ RSpec.describe S3Bunny::Interface do
       expect(subject.browser_upload(region: 'eu-west-1')).to be_kind_of(S3Bunny::BrowserUpload)
     end
   end
+
+  describe '#sqs_collector' do
+    it 'should return SQSMessageCollector' do
+      expect(subject.sqs_collector).to be_kind_of S3Bunny::SQSMessageCollector
+    end
+
+    it 'it should register all queues from setup' do
+      expect(subject.sqs_collector.queues.size).to be 2
+      expect(subject.sqs_collector.queues.last.url).to eq 'https://sqs.ap-southeast-2.amazonaws.com/666666666666/my-app-queue'
+    end
+  end
 end
