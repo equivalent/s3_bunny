@@ -1,5 +1,7 @@
 module S3Bunny
-  class Setup
+  class Interface
+    UnknownRegionName = Class.new(StandardError)
+
     attr_reader :setup_hash
 
     def initialize(setup_hash)
@@ -12,6 +14,19 @@ module S3Bunny
 
     def queues
       setup_hash.fetch(:queues).map { |q_hash| OpenStruct.new(q_hash) }
+    end
+
+    def browser_upload(region:)
+      bucket_name = queue_for_region(region).bucket_name
+
+      S3Bunny::BrowserUpload
+        .new(region: region, credentials: credentials, bucket_name: bucket_name)
+    end
+
+    def queue_for_region(region)
+      queues
+        .select { |q| q.region_name == region }
+        .first || raise(UnknownRegionName)
     end
 
     private

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe S3Bunny::Setup do
+RSpec.describe S3Bunny::Interface do
   subject(:bunny_setup) { described_class.new setup_hash }
 
   let(:setup_hash) do
@@ -56,6 +56,43 @@ RSpec.describe S3Bunny::Setup do
       it 'to have url' do
         expect(subject.url).to eq 'https://sqs.ap-southeast-2.amazonaws.com/666666666666/my-app-queue'
       end
+    end
+  end
+
+  describe '#queue_for_region' do
+    let(:queue_item) { subject.queue_for_region(region) }
+
+    context 'when registered region' do
+      let(:region) { 'eu-west-1' }
+
+      it do
+        expect(queue_item.bucket_name).to eq 'eu-s3-bucket-name'
+      end
+    end
+
+    context 'when unregistered region' do
+      let(:region) { 'us-west-1' }
+
+      it do
+        expect { queue_item.bucket_name }.to raise_error(S3Bunny::Interface::UnknownRegionName)
+      end
+    end
+  end
+
+  describe '#browser_upload' do
+    it 'should initialized BrowserUpload object with setup' do
+      credentials = instance_double(Aws::Credentials)
+
+      expect(Aws::Credentials)
+        .to receive(:new)
+        .and_return(credentials)
+
+      expect(S3Bunny::BrowserUpload)
+        .to receive(:new)
+        .with(region: 'eu-west-1', credentials: credentials, bucket_name: 'eu-s3-bucket-name')
+        .and_call_original
+
+      expect(subject.browser_upload(region: 'eu-west-1')).to be_kind_of(S3Bunny::BrowserUpload)
     end
   end
 end
