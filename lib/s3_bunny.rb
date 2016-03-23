@@ -1,8 +1,10 @@
 require 'aws-sdk'
 require 'forwardable'
 require 'logger'
+require 'ostruct'
 require "s3_bunny/version"
 require "s3_bunny/config"
+require "s3_bunny/setup"
 require "s3_bunny/factories/messages_factory"
 require "s3_bunny/factories/s3_item_factory"
 require "s3_bunny/sqs_message_collector"
