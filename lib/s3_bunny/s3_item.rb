@@ -1,12 +1,12 @@
 module S3Bunny
   class S3Item
-    attr_reader :region, :bucket_name, :file
+    attr_reader :region, :bucket_name, :key
 
-    def initialize(credentials:, region:, bucket_name:, file:)
+    def initialize(credentials:, region:, bucket_name:, key:)
       @bucket_name = bucket_name
       @credentials = credentials
       @region = region
-      @file = file
+      @key = key
     end
 
     def url
@@ -18,7 +18,7 @@ module S3Bunny
     end
 
     def inspect
-      "#<#{self.class.name}:#{object_id} s3://#{bucket_name}/#{file}>"
+      "#<#{self.class.name}:#{object_id} s3://#{bucket_name}/#{key}>"
     end
 
     private
@@ -31,7 +31,7 @@ module S3Bunny
             credentials: credentials,
             bucket_name: bucket_name
           })
-          .object(file)
+          .object(key)
       end
 
       def url_expiry

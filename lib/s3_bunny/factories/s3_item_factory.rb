@@ -33,7 +33,7 @@ module S3Bunny
         begin
           region = record.fetch('awsRegion') { |x| raise_body_not_s3_format(x) }
           s3     = record.fetch('s3') { |x| raise_body_not_s3_format(x) }
-          file   = s3
+          key   = s3
             .fetch('object') { |x| raise_body_not_s3_format(x) }
             .fetch('key')    { |x| raise_body_not_s3_format(x) }
           bucket_name = s3
@@ -43,7 +43,7 @@ module S3Bunny
           {
             region: region,
             bucket_name: bucket_name,
-            file: file,
+            key: key,
             credentials: credentials
           }
         rescue MessageBodyNotS3Format => e
