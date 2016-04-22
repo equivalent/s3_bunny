@@ -17,7 +17,7 @@ module S3Bunny
         credentials: credentials,
         region: region,
         bucket_name: bucket_name,
-        key: region,
+        key: key,
       })
     end
 
