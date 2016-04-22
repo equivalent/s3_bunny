@@ -12,6 +12,15 @@ module S3Bunny
       Aws::Credentials.new(aws_access_key_id, aws_secret_access_key)
     end
 
+    def s3_bunny_item(region:, bucket_name:, key:)
+      S3Bunny::S3Item.new({
+        credentials: credentials,
+        region: region,
+        bucket_name: bucket_name,
+        key: region,
+      })
+    end
+
     def queues
       setup_hash.fetch(:queues).map { |q_hash| OpenStruct.new(q_hash) }
     end
