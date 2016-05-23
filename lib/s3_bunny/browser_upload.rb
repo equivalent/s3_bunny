@@ -16,6 +16,7 @@ module S3Bunny
 
     def options
       @options || {
+        signature_expiration: signature_expiration,
         key: key_generator.call,
         success_action_status: success_action_status,
         acl: acl,
@@ -28,6 +29,10 @@ module S3Bunny
           'original-filename' => '${filename}'   # this is AWS S3 keywoard suggar.
         }
       }
+    end
+
+    def signature_expiration
+      @signature_expiration ||= Time.now + 3600
     end
 
     def content_length_range
