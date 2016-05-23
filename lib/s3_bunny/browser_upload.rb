@@ -1,6 +1,6 @@
 module S3Bunny
   class BrowserUpload
-    attr_writer :options, :key_generator, :success_action_status, :acl, :content_length_range
+    attr_writer :options, :key_generator, :success_action_status, :acl, :content_length_range, :signature_expiration
     attr_accessor :resource_type
     attr_accessor :resource_id
 
