@@ -16,7 +16,18 @@ module S3Bunny
     end
 
     def options
-      @options || {
+      return @options if @options
+
+      metadata = {
+        'app-resource-type' => resource_type,
+        'app-resource-id' =>   resource_id.to_s,
+        'original-filename' => '${filename}'   # this is AWS S3 keywoard suggar.
+      }
+
+      # field needs to be a string. I you are dealing with hash then serialize it!
+      metadata.merge!({'app-custom-field' => custom_field.to_s}) if custom_field
+
+      {
         signature_expiration: signature_expiration,
         key: key_generator.call,
         success_action_status: success_action_status,
@@ -24,12 +35,7 @@ module S3Bunny
         content_length_range: content_length_range,
         #content_type_starts_with: "image/jpg",
         key_starts_with: "uploads/",
-        metadata: {
-          'app-resource-type' => resource_type,
-          'app-resource-id' =>   resource_id.to_s,
-          'app-custom-field' => custom_field.to_s,
-          'original-filename' => '${filename}'   # this is AWS S3 keywoard suggar.
-        }
+        metadata: metadata
       }
     end
 
