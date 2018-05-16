@@ -24,7 +24,7 @@ module S3Bunny
         'original-filename' => '${filename}'   # this is AWS S3 keywoard suggar.
       }
 
-      # field needs to be a string. I you are dealing with hash then serialize it!
+      # field needs to be a string. If you are dealing with a hash then serialize it!
       metadata.merge!({'app-custom-field' => custom_field.to_s}) if custom_field
 
       {
