@@ -3,6 +3,7 @@ module S3Bunny
     attr_writer :options, :key_generator, :success_action_status, :acl, :content_length_range, :signature_expiration
     attr_accessor :resource_type
     attr_accessor :resource_id
+    attr_accessor :order
 
     def initialize(region:, credentials:, bucket_name:)
       @region = region
@@ -26,6 +27,7 @@ module S3Bunny
         metadata: {
           'app-resource-type' => resource_type,
           'app-resource-id' =>   resource_id.to_s,
+          'app-order' => order.to_s,
           'original-filename' => '${filename}'   # this is AWS S3 keywoard suggar.
         }
       }
